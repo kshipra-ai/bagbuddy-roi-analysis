@@ -1,0 +1,11 @@
+campaign_id,campaign_name,num_quarters,scan_rate,conversion_rate,avg_revenue_per_conversion,impressions_per_bag,trees_planted
+C001,Coffee Shop Q1 2025,1,15,20,25,50,100
+C002,Organic Grocery Store,2,25,30,40,75,200
+C003,Local Bakery,1,18,25,15,60,50
+C004,Fitness Center,3,20,15,100,80,300
+C005,Book Store,1,12,18,30,45,75
+C006,Restaurant Chain,2,30,35,50,100,250
+C007,Yoga Studio,1,22,28,45,55,80
+C008,Eco-Friendly Shop,1,35,40,35,90,150
+C009,Pet Store,2,16,22,55,65,120
+C010,Health Clinic,1,14,20,75,50,60

@@ -1,0 +1,234 @@
+BAGBUDDY ROI SCENARIO COMPARISON
+Generated:,"November 8, 2025"
+
+PLATFORM FEATURES
+Feature,Description,Expected Impact
+Platform-wide Redemption,Users can save points and redeem with ANY brand on BagBuddy,Increases conversion rate
+No Single-Brand Lock-in,Flexibility increases perceived value,Reduces friction in redemption
+Environmental Impact,"For every $1000 earned points, 1 tree planted",Increases engagement/scan rate
+
+SCENARIO OVERVIEW
+Scenario,Description,Scan Rate,Conversion Rate,ROI
+Conservative (Baseline),"Pure industry benchmarks, no feature boost",2.0%,20.0%,-33.33%
+Moderate (Platform Boost),Realistic impact from BagBuddy features,2.5%,25.0%,3.33%
+Optimistic (Best Case),Maximum realistic benefit from features,3.0%,30.0%,50.0%
+
+DETAILED METRICS COMPARISON
+Metric,Conservative,Moderate,Optimistic,Unit
+INPUT ASSUMPTIONS
+Scan Rate,2.0,2.5,3.0,%
+Conversion Rate,20.0,25.0,30.0,%
+Avg Revenue per Conversion,25,25,25,$
+
+CAMPAIGN COSTS
+Campaign Cost,750.0,750.0,750.0,$
+Cost per Bag Slot,0.15,0.15,0.15,$
+
+PERFORMANCE METRICS
+Total Bags Distributed,5000,5000,5000,bags
+Ad Slots per Bag,8,8,8,slots
+Impressions per Bag,5.02,5.03,5.03,impressions
+Total Impressions,25100,25125,25150,impressions
+QR Code Scans,100,125,150,scans
+Conversions/Redemptions,20,31,45,conversions
+
+REVENUE METRICS
+Total Sales Generated,500,775,1125,$
+Net Profit/Loss,-250.0,25.0,375.0,$
+
+ROI & COST EFFICIENCY
+ROI,-33.33,3.33,50.0,%
+Cost per Impression (CPI),0.0299,0.0299,0.0298,$
+Cost per Engagement (CPE),7.5,6.0,5.0,$
+Cost per Conversion (CPA),37.5,24.19,16.67,$
+
+ENVIRONMENTAL IMPACT
+Trees Planted (from sales/1000),0.5,0.775,1.125,trees
+Plastic Bags Saved,2500000,2500000,2500000,bags
+Carbon Offset,25000,25000,25000,kg CO2
+
+IMPROVEMENT VS BASELINE (CONSERVATIVE)
+Metric,Moderate vs Conservative,Optimistic vs Conservative,Unit
+Additional Scans,25,50,scans
+Additional Conversions,11,25,conversions
+Additional Revenue,275,625,$
+ROI Improvement,36.66,83.33,percentage points
+
+KEY INSIGHTS
+Scenario,Verdict,Key Finding
+Conservative,UNPROFITABLE,Standard industry performance - -33.33% ROI
+Moderate,MARGINALLY PROFITABLE,Platform features improve ROI by 36.66pp
+Optimistic,EXCELLENT PROFIT,Best case shows 50.0% ROI potential
+
+RESEARCH REFERENCES & SOURCES
+Category,Source,Key Finding,Year
+
+QR Code Benchmarks,Statista QR Code Usage Report,Average QR code scan rate: 0.5-3%,2024
+QR Code Benchmarks,Juniper Research,QR code redemption rates: 1-2% for marketing,2024
+
+Loyalty Programs,Bond Brand Loyalty Report,Coalition programs: 15-30% higher redemption vs single-brand,2023
+Loyalty Programs,Loyalty360 Industry Research,Average loyalty program redemption rate: 15-25%,2024
+Loyalty Programs,Harvard Business Review,Multi-brand flexibility increases perceived value by 20-35%,2023
+
+Environmental Impact,Nielsen Sustainability Report,73% of consumers care about sustainability,2023
+Environmental Impact,Nielsen Sustainability Report,Environmental messaging increases engagement 10-30%,2023
+Environmental Impact,IBM Consumer Behavior Study,57% change buying habits for environmental reasons,2024
+Environmental Impact,IBM Consumer Behavior Study,Intention-action gap: Only 10-30% follow through,2024
+
+Digital Advertising,Meta (Facebook/Instagram) Benchmarks,Average CPM: $5-15,2024
+Digital Advertising,Meta (Facebook/Instagram) Benchmarks,Average CTR: 0.9-1.5%,2024
+Digital Advertising,WordStream Google Ads Report,Average conversion rate: 2.5-5%,2024
+Digital Advertising,eMarketer Digital Ad Report,CPM increasing 10-15% year-over-year,2024
+
+Direct Mail/Flyers,Data & Marketing Association (DMA),Prospect list response rate: 0.5-1.2%,2023
+Direct Mail/Flyers,USPS Mail Moment Studies,Direct mail response rates declining 5-10% annually,2023
+Direct Mail/Flyers,PostGrid Research,Average flyer conversion: 5-10% of responses,2024
+
+Conversion Rate Benchmarks,Unbounce Landing Page Report,Average landing page conversion: 2-5%,2024
+Conversion Rate Benchmarks,Invesp E-commerce Benchmarks,Small business conversion rate: 1-3%,2024
+
+METHODOLOGY NOTES
+Category,Note
+Conservative Scenario,Uses pure industry benchmarks with no assumptions about BagBuddy feature benefits
+Moderate Scenario,"Applies conservative estimates from research: +25% scan rate, +25% conversion rate"
+Optimistic Scenario,"Applies optimistic but realistic estimates: +50% scan rate, +50% conversion rate"
+Cost Structure,"Based on BagBuddy platform: $0.15 per bag slot, 8 slots per bag, 5000 bags per quarter"
+Environmental Impact,Tree planting calculated as: (Total Sales / $1000) trees planted
+Plastic Bags Saved,Assumes each reusable bag replaces 500 single-use plastic bags over lifetime
+Carbon Offset,Assumes each reusable bag saves 5kg CO2 over lifetime vs single-use bags
+
+KEY ASSUMPTIONS
+Assumption,Value,Source
+Cost per Bag Slot,$0.15,BagBuddy Platform
+Bags per Quarter,"5,000",BagBuddy Platform
+Ad Slots per Bag,8,BagBuddy Platform
+Impressions per Bag,5,Estimated (8 brands competing for attention)
+Average Order Value,$25,Example - Coffee shop/retail
+Campaign Duration,1 Quarter (3 months),Minimum commitment
+
+==================================================
+DIGITAL ADS (FACEBOOK/INSTAGRAM) COMPARISON
+==================================================
+
+CAMPAIGN SETUP
+Metric,Value,Unit
+Ad Budget,1000,$
+CPM (Cost per 1000 impressions),10.0,$
+Click-Through Rate (CTR),1.0,%
+Conversion Rate,2.5,%
+Avg Revenue per Conversion,25,$
+
+PERFORMANCE RESULTS
+Metric,Value,Unit
+Total Impressions,100000,impressions
+Total Clicks,1000,clicks
+Total Conversions,25,conversions
+Total Sales,625,$
+Net Profit/Loss,-375,$
+
+ROI & COST EFFICIENCY
+Metric,Value,Unit
+ROI,-37.5,%
+ROAS (Return on Ad Spend),0.62,x
+Cost per Click (CPC),1.0,$
+Cost per Conversion (CPA),40.0,$
+
+DIGITAL ADS RESEARCH SOURCES
+Source,Key Finding,Year
+Meta (Facebook/Instagram) Benchmarks 2024,Average CPM: $5-15 (using $10),2024
+Meta (Facebook/Instagram) Benchmarks 2024,Average CTR: 0.9-1.5% (using 1.0%),2024
+WordStream Google Ads Benchmarks 2024,Average conversion rate: 2.5-5% (using 2.5%),2024
+Smartly.io Digital Advertising Benchmarks 2024,CPM increasing 10-15% year-over-year,2024
+eMarketer Digital Ad Spending Report 2024,Small business avg CPC: $0.50-$2.00,2024
+
+KEY INSIGHTS - DIGITAL ADS
+Insight,Description
+Verdict,UNPROFITABLE
+ROI Analysis,-37.5% ROI with realistic 2024-2025 benchmarks
+Cost Challenge,Cost per conversion ($40.00) exceeds average sale value ($25.00)
+Break-Even Point,Would need avg order value of $40.00+ to break even
+
+==================================================
+PRINT FLYERS COMPARISON
+==================================================
+
+CAMPAIGN SETUP
+Metric,Value,Unit
+Number of Flyers,5000,flyers
+Print Cost per Flyer,0.12,$
+Distribution Cost per Flyer,0.1,$
+Total Cost per Flyer,0.22,$
+Total Campaign Cost,1100.0,$
+Response Rate,0.8,%
+Conversion Rate,10,%
+Avg Revenue per Conversion,25,$
+
+PERFORMANCE RESULTS
+Metric,Value,Unit
+Total Impressions (flyers distributed),5000,impressions
+Total Responses,40,responses
+Total Conversions,4,conversions
+Total Sales,100,$
+Net Profit/Loss,-1000.0,$
+
+ROI & COST EFFICIENCY
+Metric,Value,Unit
+ROI,-90.91,%
+ROAS (Return on Ad Spend),0.09,x
+Cost per Impression,0.22,$
+Cost per Response,27.5,$
+Cost per Conversion (CPA),275.0,$
+
+FLYERS RESEARCH SOURCES
+Source,Key Finding,Year
+Data & Marketing Association (DMA) 2023,Prospect list response rate: 0.5-1.2% (using 0.8%),2023
+USPS Mail Moment Studies 2023,Direct mail response rates declining 5-10% annually,2023
+PostGrid Direct Mail Statistics 2024,Average flyer conversion: 5-10% of responses (using 10%),2024
+Gunderson Direct & Digital Marketing 2023,Print costs: $0.03-$0.25 per flyer depending on quality,2023
+Industry Standard 2024,Door-to-door distribution: $0.10-$0.20 per flyer,2024
+
+KEY INSIGHTS - FLYERS
+Insight,Description
+Verdict,UNPROFITABLE
+ROI Analysis,-90.91% ROI with realistic DMA 2023 benchmarks
+Cost Challenge,Cost per conversion ($275.00) far exceeds average sale value ($25.00)
+Effective Conversion,Only 0.080% of flyers result in sale
+Break-Even Point,Would need avg order value of $275.00+ to break even
+
+==================================================
+CROSS-CHANNEL COMPARISON SUMMARY
+==================================================
+
+Comparing all advertising channels with $25 average order value
+
+Channel,Budget,Conversions,Revenue,ROI,Cost per Conversion,Verdict
+BagBuddy - Conservative,$750.00,20,$500.00,-33.33%,$37.50,UNPROFITABLE
+BagBuddy - Moderate,$750.00,31,$775.00,3.33%,$24.19,MARGINALLY PROFITABLE
+BagBuddy - Optimistic,$750.00,45,$1125.00,50.0%,$16.67,EXCELLENT PROFIT
+Digital Ads (Facebook/Instagram),$1000.00,25,$625.00,-37.5%,$40.00,UNPROFITABLE
+Print Flyers,$1100.00,4,$100.00,-90.91%,$275.00,SEVERE LOSS
+
+RANKING BY ROI (Best to Worst)
+Rank,Channel,ROI
+1,BagBuddy - Optimistic,50.0%
+2,BagBuddy - Moderate,3.33%
+3,BagBuddy - Conservative,-33.33%
+4,Digital Ads,-37.5%
+5,Print Flyers,-90.91%
+
+RANKING BY COST EFFICIENCY (Best to Worst)
+Rank,Channel,Cost per Conversion
+1,BagBuddy - Optimistic,$16.67
+2,BagBuddy - Moderate,$24.19
+3,BagBuddy - Conservative,$37.50
+4,Digital Ads,$40.00
+5,Print Flyers,$275.00
+
+KEY TAKEAWAYS
+Finding,Implication
+All channels unprofitable at $25 AOV,Need higher average order value or lifetime value strategy
+BagBuddy platform features critical,Moderate scenario achieves profitability while traditional channels dont
+Flyers worst performer,-90.91% ROI - avoid unless high-ticket items or targeted
+Digital ads slightly better than BagBuddy baseline,But BagBuddy with features outperforms digital ads
+Environmental impact unique to BagBuddy,Additional value proposition beyond pure ROI
+
