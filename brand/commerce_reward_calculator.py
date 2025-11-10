@@ -34,10 +34,13 @@ class CommerceRewardCalculator:
             'bags_sold_per_month': 10000,       # Monthly bag sales volume
             
             # Ad Economics
-            'cpv_brand_pays': 0.25,             # Cost per verified ad view (brand pays)
-            'cash_credit_per_view': 0.08,       # Cash credit given to user per ad
-            'reward_points_per_view': 0.07,     # Reward points value per ad
-            'kshipra_margin_per_view': 0.10,    # Kshipra margin per ad view
+            'cpv_brand_pays': 0.20,             # Cost per verified ad view (brand pays)
+            'cash_credit_per_view': 0.06,       # Cash credit given to user per ad
+            'reward_points_per_view': 0.06,     # Reward points value per ad
+            'kshipra_margin_per_view': 0.08,    # Kshipra margin per ad view
+            
+            # User Engagement
+            'active_user_rate': 60,             # % of buyers who actually watch ads
             
             # User Behavior
             'avg_ads_to_recover_bag': 3,        # Avg ads watched to recover bag cost
@@ -174,10 +177,13 @@ class CommerceRewardCalculator:
         """Calculate value delivered to local stores through reward redemptions."""
         a = self.assumptions
         
-        # Total users based on bags sold (assume 1 bag = 1 active user/month)
-        active_users = a['bags_sold_per_month']
+        # Total bags sold
+        total_bags_sold = a['bags_sold_per_month']
         
-        # Total rewards generated
+        # Active users who actually watch ads
+        active_users = total_bags_sold * (a['active_user_rate'] / 100)
+        
+        # Total rewards generated (only active users generate rewards)
         per_user = self.calculate_revenue_per_user()
         total_rewards_generated = active_users * per_user['total_user_rewards']
         
@@ -226,7 +232,10 @@ class CommerceRewardCalculator:
         # Cost per basket influenced (using redemption data)
         store_metrics = self.calculate_store_value()
         total_influenced_transactions = store_metrics['estimated_transactions']
-        total_brand_spend = a['bags_sold_per_month'] * a['avg_monthly_ad_views'] * a['cpv_brand_pays']
+        
+        # Calculate total brand spend (only active users watch ads)
+        active_users = a['bags_sold_per_month'] * (a['active_user_rate'] / 100)
+        total_brand_spend = active_users * a['avg_monthly_ad_views'] * a['cpv_brand_pays']
         
         cost_per_basket_influenced = total_brand_spend / total_influenced_transactions if total_influenced_transactions > 0 else 0
         
@@ -255,14 +264,17 @@ class CommerceRewardCalculator:
         bags_sold = a['bags_sold_per_month']
         bag_revenue = bags_sold * a['bag_retail_price']
         
-        # Ad revenue
-        total_ad_views = bags_sold * a['avg_monthly_ad_views']
+        # Active users (only they watch ads)
+        active_users = bags_sold * (a['active_user_rate'] / 100)
+        
+        # Ad revenue (only from active users)
+        total_ad_views = active_users * a['avg_monthly_ad_views']
         ad_revenue = total_ad_views * a['cpv_brand_pays']
         
         # Total revenue
         total_revenue = bag_revenue + ad_revenue
         
-        # Costs
+        # Costs (only active users get rewards)
         total_cash_credits = total_ad_views * a['cash_credit_per_view']
         total_reward_points = total_ad_views * a['reward_points_per_view']
         total_user_rewards = total_cash_credits + total_reward_points
