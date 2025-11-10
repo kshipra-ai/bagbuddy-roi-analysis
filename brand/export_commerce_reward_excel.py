@@ -81,6 +81,29 @@ def create_commerce_reward_excel():
     bags_sold_cell = f'B{row}'
     row += 2
     
+    # Brand Partnership Growth
+    ws[f'A{row}'] = "BRAND PARTNERSHIP GROWTH"
+    style_section(ws[f'A{row}'])
+    ws.merge_cells(f'A{row}:D{row}')
+    row += 1
+    
+    ws[f'A{row}'] = "Initial Brands Enrolled"
+    ws[f'B{row}'] = 10
+    style_editable(ws[f'B{row}'])
+    ws[f'B{row}'].number_format = '0'
+    ws[f'C{row}'] = "brands"
+    ws[f'D{row}'] = "Starting number of brand advertisers"
+    initial_brands_cell = f'B{row}'
+    row += 1
+    
+    ws[f'A{row}'] = "Quarterly Brand Growth Rate"
+    ws[f'B{row}'] = 25
+    style_editable(ws[f'B{row}'])
+    ws[f'C{row}'] = "%"
+    ws[f'D{row}'] = "% increase in brands each quarter (compounding)"
+    brand_growth_cell = f'B{row}'
+    row += 2
+    
     # Ad Economics
     ws[f'A{row}'] = "AD ECONOMICS"
     style_section(ws[f'A{row}'])

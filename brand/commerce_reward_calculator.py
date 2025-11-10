@@ -33,6 +33,10 @@ class CommerceRewardCalculator:
             'bag_retail_price': 0.40,           # Price user pays per bag
             'bags_sold_per_month': 10000,       # Monthly bag sales volume
             
+            # Brand Partnership Growth
+            'initial_brands_enrolled': 10,      # Starting number of brand partners
+            'brand_growth_rate_quarterly': 25,  # % increase in brands each quarter
+            
             # Ad Economics
             'cpv_brand_pays': 0.20,             # Cost per verified ad view (brand pays)
             'cash_credit_per_view': 0.06,       # Cash credit given to user per ad
@@ -374,10 +378,133 @@ class CommerceRewardCalculator:
             'payback_months': payback_months,
             'avg_user_lifetime_months': avg_user_lifetime_months,
             'contribution_margin_per_user': contribution_margin_per_user,
-            'contribution_margin_pct': contribution_margin_pct,
-            'bag_ltv': bag_ltv,
-            'ad_ltv': ad_ltv
+                        'contribution_margin_pct': contribution_margin_pct
         }
+    
+    def calculate_brand_growth_metrics(self):
+        """Calculate brand partnership growth and its impact on revenue."""
+        a = self.assumptions
+        
+        initial_brands = a['initial_brands_enrolled']
+        quarterly_growth = a['brand_growth_rate_quarterly'] / 100
+        
+        # Calculate brands for next 12 months (4 quarters)
+        brands_q1 = initial_brands
+        brands_q2 = brands_q1 * (1 + quarterly_growth)
+        brands_q3 = brands_q2 * (1 + quarterly_growth)
+        brands_q4 = brands_q3 * (1 + quarterly_growth)
+        
+        # Average brands per quarter
+        avg_brands_by_quarter = [brands_q1, brands_q2, brands_q3, brands_q4]
+        
+        # Calculate monthly averages within each quarter
+        brands_month_1_3 = brands_q1  # Months 1-3
+        brands_month_4_6 = brands_q2  # Months 4-6
+        brands_month_7_9 = brands_q3  # Months 7-9
+        brands_month_10_12 = brands_q4  # Months 10-12
+        
+        # Average brands across all 12 months
+        avg_brands_year1 = sum(avg_brands_by_quarter) / 4
+        
+        # Impact on ad inventory and revenue
+        # More brands = more ads available = higher fill rate + better CPV rates
+        
+        # Base assumptions with initial brands
+        base_fill_rate = 0.85  # 85% fill rate with 10 brands
+        
+        # Fill rate improves with more brands (diminishing returns)
+        # Each additional brand adds value, but at decreasing rate
+        def calculate_fill_rate(num_brands):
+            # Logarithmic growth: more brands = higher fill rate, capped at 95%
+            improvement = (num_brands / initial_brands - 1) * 0.08
+            return min(0.95, base_fill_rate + improvement)
+        
+        fill_rate_q1 = calculate_fill_rate(brands_q1)
+        fill_rate_q2 = calculate_fill_rate(brands_q2)
+        fill_rate_q3 = calculate_fill_rate(brands_q3)
+        fill_rate_q4 = calculate_fill_rate(brands_q4)
+        
+        # Calculate revenue impact
+        monthly_summary = self.calculate_monthly_summary()
+        base_ad_revenue = monthly_summary['ad_revenue']  # This assumes base_fill_rate
+        
+        # Adjusted ad revenue with improved fill rates
+        # Revenue increases as fill rate improves
+        adjusted_ad_revenue_month_1_3 = base_ad_revenue * (fill_rate_q1 / base_fill_rate)
+        adjusted_ad_revenue_month_4_6 = base_ad_revenue * (fill_rate_q2 / base_fill_rate)
+        adjusted_ad_revenue_month_7_9 = base_ad_revenue * (fill_rate_q3 / base_fill_rate)
+        adjusted_ad_revenue_month_10_12 = base_ad_revenue * (fill_rate_q4 / base_fill_rate)
+        
+        # Total annual ad revenue with brand growth
+        total_annual_ad_revenue = (
+            adjusted_ad_revenue_month_1_3 * 3 +
+            adjusted_ad_revenue_month_4_6 * 3 +
+            adjusted_ad_revenue_month_7_9 * 3 +
+            adjusted_ad_revenue_month_10_12 * 3
+        )
+        
+        # Revenue lift from brand growth
+        base_annual_ad_revenue = base_ad_revenue * 12
+        revenue_lift = total_annual_ad_revenue - base_annual_ad_revenue
+        revenue_lift_pct = (revenue_lift / base_annual_ad_revenue * 100) if base_annual_ad_revenue > 0 else 0
+        
+        # Calculate average fill rate across year
+        avg_fill_rate = (fill_rate_q1 + fill_rate_q2 + fill_rate_q3 + fill_rate_q4) / 4
+        
+        return {
+            'initial_brands': initial_brands,
+            'quarterly_growth_rate': a['brand_growth_rate_quarterly'],
+            'brands_q1': brands_q1,
+            'brands_q2': brands_q2,
+            'brands_q3': brands_q3,
+            'brands_q4': brands_q4,
+            'avg_brands_year1': avg_brands_year1,
+            'base_fill_rate': base_fill_rate * 100,
+            'year_end_fill_rate': fill_rate_q4 * 100,
+            'avg_fill_rate': avg_fill_rate * 100,
+            'base_monthly_ad_revenue': base_ad_revenue,
+            'adjusted_revenue_q1': adjusted_ad_revenue_month_1_3,
+            'adjusted_revenue_q2': adjusted_ad_revenue_month_4_6,
+            'adjusted_revenue_q3': adjusted_ad_revenue_month_7_9,
+            'adjusted_revenue_q4': adjusted_ad_revenue_month_10_12,
+            'base_annual_ad_revenue': base_annual_ad_revenue,
+            'total_annual_ad_revenue': total_annual_ad_revenue,
+            'revenue_lift_from_growth': revenue_lift,
+            'revenue_lift_pct': revenue_lift_pct
+        }
+    
+    def print_summary(self):
+        """Print comprehensive business model summary."""
+        print("\n" + "="*70)
+        print("KSHIPRA AI COMMERCE-REWARD BUSINESS MODEL - SUMMARY")
+        print("="*70)
+        
+        # Key Assumptions
+        print("\n📊 KEY ASSUMPTIONS:")
+        print(f"Bag Retail Price: ${self.assumptions['bag_retail_price']:.2f}")
+        print(f"Monthly Bags Sold: {self.assumptions['bags_sold_per_month']:,}")
+        print(f"Initial Brands Enrolled: {self.assumptions['initial_brands_enrolled']}")
+        print(f"Quarterly Brand Growth: {self.assumptions['brand_growth_rate_quarterly']}%")
+        print(f"Brand CPV: ${self.assumptions['cpv_brand_pays']:.2f}")
+        print(f"Cash Credit per View: ${self.assumptions['cash_credit_per_view']:.2f}")
+        print(f"Reward Points per View: ${self.assumptions['reward_points_per_view']:.2f}")
+        print(f"Kshipra Margin per View: ${self.assumptions['kshipra_margin_per_view']:.2f}")
+        print(f"Avg Ads to Recover Bag Cost: {self.assumptions['avg_ads_to_recover_bag']}")
+        
+        # Brand Growth Impact
+        brand_growth = self.calculate_brand_growth_metrics()
+        print("\n📈 BRAND PARTNERSHIP GROWTH:")
+        print(f"Starting Brands: {brand_growth['initial_brands']}")
+        print(f"Q1 Avg Brands: {brand_growth['brands_q1']:.0f}")
+        print(f"Q2 Avg Brands: {brand_growth['brands_q2']:.0f}")
+        print(f"Q3 Avg Brands: {brand_growth['brands_q3']:.0f}")
+        print(f"Q4 Avg Brands: {brand_growth['brands_q4']:.0f}")
+        print(f"Year 1 Avg Brands: {brand_growth['avg_brands_year1']:.1f}")
+        print(f"Ad Fill Rate: {brand_growth['base_fill_rate']:.0f}% → {brand_growth['year_end_fill_rate']:.0f}% (avg {brand_growth['avg_fill_rate']:.0f}%)")
+        print(f"Revenue Lift from Brand Growth: ${brand_growth['revenue_lift_from_growth']:,.0f} ({brand_growth['revenue_lift_pct']:.1f}%)")
+        
+        # Call helper to print rest of summary
+        self._print_remaining_summary()
     
     def calculate_sensitivity_analysis(self, variable, values):
         """
@@ -414,22 +541,8 @@ class CommerceRewardCalculator:
         
         return results
     
-    def print_summary(self):
-        """Print comprehensive business model summary."""
-        print("\n" + "="*70)
-        print("KSHIPRA AI COMMERCE-REWARD BUSINESS MODEL - SUMMARY")
-        print("="*70)
-        
-        # Key Assumptions
-        print("\n📊 KEY ASSUMPTIONS:")
-        print(f"Bag Retail Price: ${self.assumptions['bag_retail_price']:.2f}")
-        print(f"Monthly Bags Sold: {self.assumptions['bags_sold_per_month']:,}")
-        print(f"Brand CPV: ${self.assumptions['cpv_brand_pays']:.2f}")
-        print(f"Cash Credit per View: ${self.assumptions['cash_credit_per_view']:.2f}")
-        print(f"Reward Points per View: ${self.assumptions['reward_points_per_view']:.2f}")
-        print(f"Kshipra Margin per View: ${self.assumptions['kshipra_margin_per_view']:.2f}")
-        print(f"Avg Ads to Recover Bag Cost: {self.assumptions['avg_ads_to_recover_bag']}")
-        
+    def _print_remaining_summary(self):
+        """Print remaining summary sections (called by print_summary)."""
         # Monthly Summary
         summary = self.calculate_monthly_summary()
         print("\n💰 MONTHLY REVENUE:")
