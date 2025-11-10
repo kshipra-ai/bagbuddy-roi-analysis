@@ -77,8 +77,16 @@ def create_commerce_reward_excel():
     style_editable(ws[f'B{row}'])
     ws[f'B{row}'].number_format = '#,##0'
     ws[f'C{row}'] = "bags"
-    ws[f'D{row}'] = "Monthly volume - scale this to model growth"
+    ws[f'D{row}'] = "Initial monthly volume - will grow quarterly"
     bags_sold_cell = f'B{row}'
+    row += 1
+    
+    ws[f'A{row}'] = "Quarterly Bag Sales Growth"
+    ws[f'B{row}'] = 15
+    style_editable(ws[f'B{row}'])
+    ws[f'C{row}'] = "%"
+    ws[f'D{row}'] = "% increase in bag sales each quarter (compounding)"
+    bag_growth_cell = f'B{row}'
     row += 2
     
     # Brand Partnership Growth

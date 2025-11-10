@@ -31,9 +31,10 @@ class CommerceRewardCalculator:
         return {
             # Pricing
             'bag_retail_price': 0.40,           # Price user pays per bag
-            'bags_sold_per_month': 10000,       # Monthly bag sales volume
+            'bags_sold_per_month': 10000,       # Monthly bag sales volume (starting)
             
-            # Brand Partnership Growth
+            # Business Growth
+            'bag_sales_growth_quarterly': 15,   # % increase in bag sales each quarter
             'initial_brands_enrolled': 10,      # Starting number of brand partners
             'brand_growth_rate_quarterly': 25,  # % increase in brands each quarter
             
@@ -381,39 +382,37 @@ class CommerceRewardCalculator:
                         'contribution_margin_pct': contribution_margin_pct
         }
     
-    def calculate_brand_growth_metrics(self):
-        """Calculate brand partnership growth and its impact on revenue."""
+    def calculate_business_growth_metrics(self):
+        """Calculate bag sales and brand partnership growth projections."""
         a = self.assumptions
         
+        # Starting values
+        initial_bags = a['bags_sold_per_month']
         initial_brands = a['initial_brands_enrolled']
-        quarterly_growth = a['brand_growth_rate_quarterly'] / 100
+        bag_growth_rate = a['bag_sales_growth_quarterly'] / 100
+        brand_growth_rate = a['brand_growth_rate_quarterly'] / 100
         
-        # Calculate brands for next 12 months (4 quarters)
+        # Calculate quarterly growth for bags
+        bags_q1 = initial_bags
+        bags_q2 = bags_q1 * (1 + bag_growth_rate)
+        bags_q3 = bags_q2 * (1 + bag_growth_rate)
+        bags_q4 = bags_q3 * (1 + bag_growth_rate)
+        
+        avg_bags_year1 = (bags_q1 * 3 + bags_q2 * 3 + bags_q3 * 3 + bags_q4 * 3) / 12
+        
+        # Calculate quarterly growth for brands
         brands_q1 = initial_brands
-        brands_q2 = brands_q1 * (1 + quarterly_growth)
-        brands_q3 = brands_q2 * (1 + quarterly_growth)
-        brands_q4 = brands_q3 * (1 + quarterly_growth)
+        brands_q2 = brands_q1 * (1 + brand_growth_rate)
+        brands_q3 = brands_q2 * (1 + brand_growth_rate)
+        brands_q4 = brands_q3 * (1 + brand_growth_rate)
         
-        # Average brands per quarter
-        avg_brands_by_quarter = [brands_q1, brands_q2, brands_q3, brands_q4]
+        avg_brands_year1 = (brands_q1 + brands_q2 + brands_q3 + brands_q4) / 4
         
-        # Calculate monthly averages within each quarter
-        brands_month_1_3 = brands_q1  # Months 1-3
-        brands_month_4_6 = brands_q2  # Months 4-6
-        brands_month_7_9 = brands_q3  # Months 7-9
-        brands_month_10_12 = brands_q4  # Months 10-12
-        
-        # Average brands across all 12 months
-        avg_brands_year1 = sum(avg_brands_by_quarter) / 4
-        
-        # Impact on ad inventory and revenue
-        # More brands = more ads available = higher fill rate + better CPV rates
-        
+        # Calculate quarterly revenue with BOTH bag growth AND brand growth
         # Base assumptions with initial brands
         base_fill_rate = 0.85  # 85% fill rate with 10 brands
         
         # Fill rate improves with more brands (diminishing returns)
-        # Each additional brand adds value, but at decreasing rate
         def calculate_fill_rate(num_brands):
             # Logarithmic growth: more brands = higher fill rate, capped at 95%
             improvement = (num_brands / initial_brands - 1) * 0.08
@@ -424,36 +423,80 @@ class CommerceRewardCalculator:
         fill_rate_q3 = calculate_fill_rate(brands_q3)
         fill_rate_q4 = calculate_fill_rate(brands_q4)
         
-        # Calculate revenue impact
-        monthly_summary = self.calculate_monthly_summary()
-        base_ad_revenue = monthly_summary['ad_revenue']  # This assumes base_fill_rate
+        # Get base monthly metrics (using initial bags_sold_per_month)
+        base_monthly_summary = self.calculate_monthly_summary()
+        base_bag_revenue = initial_bags * a['bag_retail_price']
+        base_ad_revenue = base_monthly_summary['ad_revenue']
         
-        # Adjusted ad revenue with improved fill rates
-        # Revenue increases as fill rate improves
-        adjusted_ad_revenue_month_1_3 = base_ad_revenue * (fill_rate_q1 / base_fill_rate)
-        adjusted_ad_revenue_month_4_6 = base_ad_revenue * (fill_rate_q2 / base_fill_rate)
-        adjusted_ad_revenue_month_7_9 = base_ad_revenue * (fill_rate_q3 / base_fill_rate)
-        adjusted_ad_revenue_month_10_12 = base_ad_revenue * (fill_rate_q4 / base_fill_rate)
+        # Calculate quarterly revenue accounting for BOTH growth factors
+        # Q1: Month 1-3
+        bag_revenue_q1 = bags_q1 * a['bag_retail_price'] * 3
+        active_users_q1 = bags_q1 * (a['active_user_rate'] / 100)
+        ad_views_q1 = active_users_q1 * a['avg_monthly_ad_views']
+        ad_revenue_q1 = ad_views_q1 * a['cpv_brand_pays'] * (fill_rate_q1 / base_fill_rate) * 3
+        total_revenue_q1 = bag_revenue_q1 + ad_revenue_q1
         
-        # Total annual ad revenue with brand growth
-        total_annual_ad_revenue = (
-            adjusted_ad_revenue_month_1_3 * 3 +
-            adjusted_ad_revenue_month_4_6 * 3 +
-            adjusted_ad_revenue_month_7_9 * 3 +
-            adjusted_ad_revenue_month_10_12 * 3
-        )
+        # Q2: Month 4-6
+        bag_revenue_q2 = bags_q2 * a['bag_retail_price'] * 3
+        active_users_q2 = bags_q2 * (a['active_user_rate'] / 100)
+        ad_views_q2 = active_users_q2 * a['avg_monthly_ad_views']
+        ad_revenue_q2 = ad_views_q2 * a['cpv_brand_pays'] * (fill_rate_q2 / base_fill_rate) * 3
+        total_revenue_q2 = bag_revenue_q2 + ad_revenue_q2
         
-        # Revenue lift from brand growth
+        # Q3: Month 7-9
+        bag_revenue_q3 = bags_q3 * a['bag_retail_price'] * 3
+        active_users_q3 = bags_q3 * (a['active_user_rate'] / 100)
+        ad_views_q3 = active_users_q3 * a['avg_monthly_ad_views']
+        ad_revenue_q3 = ad_views_q3 * a['cpv_brand_pays'] * (fill_rate_q3 / base_fill_rate) * 3
+        total_revenue_q3 = bag_revenue_q3 + ad_revenue_q3
+        
+        # Q4: Month 10-12
+        bag_revenue_q4 = bags_q4 * a['bag_retail_price'] * 3
+        active_users_q4 = bags_q4 * (a['active_user_rate'] / 100)
+        ad_views_q4 = active_users_q4 * a['avg_monthly_ad_views']
+        ad_revenue_q4 = ad_views_q4 * a['cpv_brand_pays'] * (fill_rate_q4 / base_fill_rate) * 3
+        total_revenue_q4 = bag_revenue_q4 + ad_revenue_q4
+        
+        # Annual totals
+        total_annual_bag_revenue = bag_revenue_q1 + bag_revenue_q2 + bag_revenue_q3 + bag_revenue_q4
+        total_annual_ad_revenue = ad_revenue_q1 + ad_revenue_q2 + ad_revenue_q3 + ad_revenue_q4
+        total_annual_revenue = total_annual_bag_revenue + total_annual_ad_revenue
+        
+        # Compare to base (no growth scenario)
+        base_annual_bag_revenue = base_bag_revenue * 12
         base_annual_ad_revenue = base_ad_revenue * 12
-        revenue_lift = total_annual_ad_revenue - base_annual_ad_revenue
-        revenue_lift_pct = (revenue_lift / base_annual_ad_revenue * 100) if base_annual_ad_revenue > 0 else 0
+        base_annual_revenue = base_annual_bag_revenue + base_annual_ad_revenue
+        
+        # Revenue lifts
+        bag_revenue_lift = total_annual_bag_revenue - base_annual_bag_revenue
+        bag_revenue_lift_pct = (bag_revenue_lift / base_annual_bag_revenue * 100) if base_annual_bag_revenue > 0 else 0
+        
+        ad_revenue_lift = total_annual_ad_revenue - base_annual_ad_revenue
+        ad_revenue_lift_pct = (ad_revenue_lift / base_annual_ad_revenue * 100) if base_annual_ad_revenue > 0 else 0
+        
+        total_revenue_lift = total_annual_revenue - base_annual_revenue
+        total_revenue_lift_pct = (total_revenue_lift / base_annual_revenue * 100) if base_annual_revenue > 0 else 0
         
         # Calculate average fill rate across year
         avg_fill_rate = (fill_rate_q1 + fill_rate_q2 + fill_rate_q3 + fill_rate_q4) / 4
         
         return {
+            # Bag growth
+            'initial_bags': initial_bags,
+            'bag_growth_rate_quarterly': a['bag_sales_growth_quarterly'],
+            'bags_q1': bags_q1,
+            'bags_q2': bags_q2,
+            'bags_q3': bags_q3,
+            'bags_q4': bags_q4,
+            'avg_bags_year1': avg_bags_year1,
+            'bag_revenue_q1': bag_revenue_q1,
+            'bag_revenue_q2': bag_revenue_q2,
+            'bag_revenue_q3': bag_revenue_q3,
+            'bag_revenue_q4': bag_revenue_q4,
+            
+            # Brand growth
             'initial_brands': initial_brands,
-            'quarterly_growth_rate': a['brand_growth_rate_quarterly'],
+            'brand_growth_rate_quarterly': a['brand_growth_rate_quarterly'],
             'brands_q1': brands_q1,
             'brands_q2': brands_q2,
             'brands_q3': brands_q3,
@@ -462,15 +505,32 @@ class CommerceRewardCalculator:
             'base_fill_rate': base_fill_rate * 100,
             'year_end_fill_rate': fill_rate_q4 * 100,
             'avg_fill_rate': avg_fill_rate * 100,
-            'base_monthly_ad_revenue': base_ad_revenue,
-            'adjusted_revenue_q1': adjusted_ad_revenue_month_1_3,
-            'adjusted_revenue_q2': adjusted_ad_revenue_month_4_6,
-            'adjusted_revenue_q3': adjusted_ad_revenue_month_7_9,
-            'adjusted_revenue_q4': adjusted_ad_revenue_month_10_12,
+            
+            # Revenue breakdown
+            'ad_revenue_q1': ad_revenue_q1,
+            'ad_revenue_q2': ad_revenue_q2,
+            'ad_revenue_q3': ad_revenue_q3,
+            'ad_revenue_q4': ad_revenue_q4,
+            'total_revenue_q1': total_revenue_q1,
+            'total_revenue_q2': total_revenue_q2,
+            'total_revenue_q3': total_revenue_q3,
+            'total_revenue_q4': total_revenue_q4,
+            
+            # Annual totals
+            'base_annual_bag_revenue': base_annual_bag_revenue,
+            'total_annual_bag_revenue': total_annual_bag_revenue,
+            'bag_revenue_lift': bag_revenue_lift,
+            'bag_revenue_lift_pct': bag_revenue_lift_pct,
+            
             'base_annual_ad_revenue': base_annual_ad_revenue,
             'total_annual_ad_revenue': total_annual_ad_revenue,
-            'revenue_lift_from_growth': revenue_lift,
-            'revenue_lift_pct': revenue_lift_pct
+            'ad_revenue_lift': ad_revenue_lift,
+            'ad_revenue_lift_pct': ad_revenue_lift_pct,
+            
+            'base_annual_revenue': base_annual_revenue,
+            'total_annual_revenue': total_annual_revenue,
+            'total_revenue_lift': total_revenue_lift,
+            'total_revenue_lift_pct': total_revenue_lift_pct
         }
     
     def print_summary(self):
@@ -482,7 +542,8 @@ class CommerceRewardCalculator:
         # Key Assumptions
         print("\n📊 KEY ASSUMPTIONS:")
         print(f"Bag Retail Price: ${self.assumptions['bag_retail_price']:.2f}")
-        print(f"Monthly Bags Sold: {self.assumptions['bags_sold_per_month']:,}")
+        print(f"Monthly Bags Sold (Initial): {self.assumptions['bags_sold_per_month']:,}")
+        print(f"Quarterly Bag Growth: {self.assumptions['bag_sales_growth_quarterly']}%")
         print(f"Initial Brands Enrolled: {self.assumptions['initial_brands_enrolled']}")
         print(f"Quarterly Brand Growth: {self.assumptions['brand_growth_rate_quarterly']}%")
         print(f"Brand CPV: ${self.assumptions['cpv_brand_pays']:.2f}")
@@ -491,17 +552,24 @@ class CommerceRewardCalculator:
         print(f"Kshipra Margin per View: ${self.assumptions['kshipra_margin_per_view']:.2f}")
         print(f"Avg Ads to Recover Bag Cost: {self.assumptions['avg_ads_to_recover_bag']}")
         
-        # Brand Growth Impact
-        brand_growth = self.calculate_brand_growth_metrics()
-        print("\n📈 BRAND PARTNERSHIP GROWTH:")
-        print(f"Starting Brands: {brand_growth['initial_brands']}")
-        print(f"Q1 Avg Brands: {brand_growth['brands_q1']:.0f}")
-        print(f"Q2 Avg Brands: {brand_growth['brands_q2']:.0f}")
-        print(f"Q3 Avg Brands: {brand_growth['brands_q3']:.0f}")
-        print(f"Q4 Avg Brands: {brand_growth['brands_q4']:.0f}")
-        print(f"Year 1 Avg Brands: {brand_growth['avg_brands_year1']:.1f}")
-        print(f"Ad Fill Rate: {brand_growth['base_fill_rate']:.0f}% → {brand_growth['year_end_fill_rate']:.0f}% (avg {brand_growth['avg_fill_rate']:.0f}%)")
-        print(f"Revenue Lift from Brand Growth: ${brand_growth['revenue_lift_from_growth']:,.0f} ({brand_growth['revenue_lift_pct']:.1f}%)")
+        # Business Growth Impact
+        growth = self.calculate_business_growth_metrics()
+        print("\n📈 BUSINESS GROWTH PROJECTIONS (Year 1):")
+        print(f"\nBag Sales Growth:")
+        print(f"  Q1: {growth['bags_q1']:,.0f} bags → Q4: {growth['bags_q4']:,.0f} bags")
+        print(f"  Year 1 Average: {growth['avg_bags_year1']:,.0f} bags/month")
+        print(f"  Revenue Lift: ${growth['bag_revenue_lift']:,.0f} (+{growth['bag_revenue_lift_pct']:.1f}%)")
+        
+        print(f"\nBrand Partnership Growth:")
+        print(f"  Q1: {growth['brands_q1']:.0f} brands → Q4: {growth['brands_q4']:.0f} brands")
+        print(f"  Year 1 Average: {growth['avg_brands_year1']:.1f} brands")
+        print(f"  Ad Fill Rate: {growth['base_fill_rate']:.0f}% → {growth['year_end_fill_rate']:.0f}%")
+        print(f"  Revenue Lift: ${growth['ad_revenue_lift']:,.0f} (+{growth['ad_revenue_lift_pct']:.1f}%)")
+        
+        print(f"\nTotal Combined Growth Impact:")
+        print(f"  Base Annual Revenue: ${growth['base_annual_revenue']:,.0f}")
+        print(f"  Year 1 Actual Revenue: ${growth['total_annual_revenue']:,.0f}")
+        print(f"  Total Revenue Lift: ${growth['total_revenue_lift']:,.0f} (+{growth['total_revenue_lift_pct']:.1f}%)")
         
         # Call helper to print rest of summary
         self._print_remaining_summary()
